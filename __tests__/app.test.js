@@ -2,6 +2,8 @@ const pool = require('../lib/utils/pool');
 const setup = require('../data/setup');
 const request = require('supertest');
 const app = require('../lib/app');
+const User = require('../lib/models/User.js');
+const UserService = require('../lib/services/UserService.js');
 
 const newUser = {
   email: 'admin@test.com',
@@ -30,6 +32,16 @@ describe('backend-express-template routes', () => {
     expect(res.status).toEqual(200);
   });
 
+  it('DELETE /sessions deletes the user session', async () => {
+    const agent = request.agent(app);
+    await UserService.create({ ...newUser });
+    await agent
+      .post('/api/v1/users/sessions')
+      .send({ email: 'admin@test.com', password: 'password' });
+
+    const resp = await agent.delete('/api/v1/users/sessions');
+    expect(resp.status).toBe(204);
+  });
   afterAll(() => {
     pool.end();
   });
