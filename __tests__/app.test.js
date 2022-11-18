@@ -47,7 +47,13 @@ describe('backend-express-template routes', () => {
     const resp = await request(app).get('/api/v1/secrets');
     expect(resp.body).toEqual([
       {
-        id: expect.any(Number),
+        id: expect.any(String),
+        title: expect.any(String),
+        description: expect.any(String),
+        created_at: expect.any(String),
+      },
+      {
+        id: expect.any(String),
         title: expect.any(String),
         description: expect.any(String),
         created_at: expect.any(String),
