@@ -2,7 +2,6 @@ const pool = require('../lib/utils/pool');
 const setup = require('../data/setup');
 const request = require('supertest');
 const app = require('../lib/app');
-const User = require('../lib/models/User.js');
 const UserService = require('../lib/services/UserService.js');
 
 const newUser = {
@@ -44,7 +43,13 @@ describe('backend-express-template routes', () => {
   });
 
   it('/secrets should have a list of secrets', async () => {
-    const resp = await request(app).get('/api/v1/secrets');
+    const agent = request.agent(app);
+    await UserService.create({ ...newUser });
+    await agent
+      .post('/api/v1/users/sessions')
+      .send({ email: 'admin@test.com', password: 'password' });
+
+    const resp = await agent.get('/api/v1/secrets');
     expect(resp.body).toEqual([
       {
         id: expect.any(String),
