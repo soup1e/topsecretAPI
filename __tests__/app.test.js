@@ -77,7 +77,7 @@ describe('backend-express-template routes', () => {
       .send({ title: 'New top secret', description: 'about' });
 
     const resp = await agent.get('/api/v1/secrets');
-    console.log(resp.body);
+
     expect(resp.body).toEqual([
       {
         id: expect.any(String),
