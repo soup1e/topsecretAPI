@@ -66,6 +66,39 @@ describe('backend-express-template routes', () => {
     ]);
   });
 
+  it('POST Secret should post a Secret', async () => {
+    const agent = request.agent(app);
+    await UserService.create({ ...newUser });
+    await agent
+      .post('/api/v1/users/sessions')
+      .send({ email: 'admin@test.com', password: 'password' });
+    await agent
+      .post('/api/v1/secrets')
+      .send({ title: 'New top secret', description: 'about' });
+
+    const resp = await agent.get('/api/v1/secrets');
+    console.log(resp.body);
+    expect(resp.body).toEqual([
+      {
+        id: expect.any(String),
+        title: expect.any(String),
+        description: expect.any(String),
+        created_at: expect.any(String),
+      },
+      {
+        id: expect.any(String),
+        title: expect.any(String),
+        description: expect.any(String),
+        created_at: expect.any(String),
+      },
+      {
+        id: expect.any(String),
+        title: 'New top secret',
+        description: 'about',
+        created_at: expect.any(String),
+      },
+    ]);
+  });
   afterAll(() => {
     pool.end();
   });
