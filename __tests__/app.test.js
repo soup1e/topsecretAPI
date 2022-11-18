@@ -42,6 +42,19 @@ describe('backend-express-template routes', () => {
     const resp = await agent.delete('/api/v1/users/sessions');
     expect(resp.status).toBe(204);
   });
+
+  it('/secrets should have a list of secrets', async () => {
+    const resp = await request(app).get('/api/v1/secrets');
+    expect(resp.body).toEqual([
+      {
+        id: expect.any(Number),
+        title: expect.any(String),
+        description: expect.any(String),
+        created_at: expect.any(String),
+      },
+    ]);
+  });
+
   afterAll(() => {
     pool.end();
   });
